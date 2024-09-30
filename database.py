@@ -90,5 +90,41 @@ def project_columns():
     people = person_collection.find(query, columns)
     for person in people:
         printer.pprint(person)
-        
-project_columns()
+
+def update_person_by_id(person_id):
+    from bson.objectid import ObjectId
+    if ObjectId.is_valid(person_id):
+        _id = ObjectId(person_id)
+        """ all_updates = {
+                "$set": {"new_field": True},
+                "$inc": {"age": 1},
+                "$rename": {"first_name": "first", "last_name" : "last"}
+            } """
+        all_updates = {"$unset": {"new_field": ""}}
+        person_collection.update_one({"_id": _id}, all_updates)
+    else:
+        print("Invalid ID")
+
+def replace_one(person_id):
+    from bson.objectid import ObjectId
+    if ObjectId.is_valid(person_id):
+        _id = ObjectId(person_id)
+        new_person = {
+            "first_name": "new first name",
+            "last_name": "new last name",
+            "age": 100
+        }
+        person_collection.replace_one({"_id": _id}, new_person)
+    else:
+        print("Invalid ID")
+
+def delete_doc_by_id(person_id):
+    from bson.objectid import ObjectId
+    if ObjectId.is_valid(person_id):
+        _id = ObjectId(person_id)
+        person_collection.delete_one({"_id": _id})
+    else:
+        print("Invalid ID")
+    
+
+delete_doc_by_id("66fa7ddadcba2afc8dc901d5")
